@@ -43,12 +43,10 @@ BuildRequires:  mysql-devel
 BuildRequires:  nodejs
 BuildRequires:  python-devel
 %if 0%{?suse_version}
-%define __obs_ruby_version 3.1.1
 %define __obs_ruby_interpreter /usr/bin/ruby.ruby3.1
 BuildRequires:  ruby3.1-devel
 BuildRequires:  openldap2-devel
 %else
-%define __obs_ruby_version 2.6.0
 %define __obs_ruby_interpreter /usr/bin/ruby
 BuildRequires:  ruby-devel
 BuildRequires:  rubygem-bundler
@@ -61,8 +59,6 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 %description
 This package bundles all the gems required by the Open Build Service
 to make it easier to deploy the obs-server package.
-
-%define rack_version 2.2.3
 
 %package -n obs-api-deps
 Summary:        Holding dependencies required to run the OBS frontend
@@ -78,7 +74,7 @@ Requires:       obs-bundled-gems = %{version}
 Requires:       sphinx >= 2.2.11
 Requires:       perl(GD)
 %if 0%{?suse_version}
-Requires:       rubygem(ruby:%{__obs_ruby_version}:rack:%{rack_version})
+Requires:       rubygem(ruby:3.1.0:rack)
 %else
 Requires:       rubygem-bundler
 Requires:       rubygem-rake
@@ -131,9 +127,6 @@ bundle config build.nio4r --with-cflags='%{optflags} -Wno-return-type'
 
 bundle --local --path %{buildroot}%_libdir/obs-api/
 
-# test that the rake and rack macros is still matching our Gemfile
-test -f %{buildroot}%_libdir/obs-api/ruby/%{__obs_ruby_version}/gems/rack-%{rack_version}/rack.gemspec
-
 # run gem clean up script
 chmod 755 %{S:2}
 %{S:2}  %{buildroot}%_libdir/obs-api/ruby/*/
@@ -159,7 +152,7 @@ find %{buildroot}%_libdir/obs-api -name .gitignore | xargs rm -rf
 
 # fix interpreter in installed binaries
 for bin in %{buildroot}%_libdir/obs-api/ruby/*/bin/*; do
-  sed -i -e 's,/usr/bin/env ruby.ruby2.5,%{__obs_ruby_interpreter},' $bin
+  sed -i -e 's,/usr/bin/env ruby.ruby3.1,%{__obs_ruby_interpreter},' $bin
 done
 
 # remove exec bit from all other files still containing /usr/bin/env - mostly helper scripts
