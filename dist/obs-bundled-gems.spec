@@ -112,7 +112,7 @@ cp %{S:0} %{S:1} .
 
 # copy gem files into cache
 mkdir -p vendor/cache
-cp %{_sourcedir}/vendor/cache/*.gem vendor/cache
+mv %{_sourcedir}/*.gem vendor/cache
 
 %build
 # emtpy since bundle does not decouple compile and install

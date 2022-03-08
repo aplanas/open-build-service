@@ -463,8 +463,8 @@ OBS_RUBY_ABI_VERSION=%{__obs_ruby_abi_version}
 EOF
 
 pushd src/api
-# configure to the bundled gems
 bundle --local --path %_libdir/obs-api/
+rm -rf vendor/cache/*
 popd
 
 #
